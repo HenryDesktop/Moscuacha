@@ -12,8 +12,10 @@ import org.firstinspires.ftc.teamcode.Chasis.ChasisCommand;
 import org.firstinspires.ftc.teamcode.Chasis.ChasisSusbystem;
 import org.firstinspires.ftc.teamcode.Intake.IntakeCommand;
 import org.firstinspires.ftc.teamcode.Intake.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.MotorTest.TestCommand;
-import org.firstinspires.ftc.teamcode.MotorTest.TestSubsystem;
+import org.firstinspires.ftc.teamcode.Shooter.Servo.ServoCommand;
+import org.firstinspires.ftc.teamcode.Shooter.Servo.ServoSubsystem;
+import org.firstinspires.ftc.teamcode.Shooter.Servo.ShooterCommand;
+import org.firstinspires.ftc.teamcode.Shooter.ShooterSubsystem;
 //import org.firstinspires.ftc.teamcode.Intake.Servos.ServoSubsystem;
 //import org.firstinspires.ftc.teamcode.Intake.Servos.ServosCommand;
 
@@ -24,8 +26,8 @@ public class MainController extends CommandOpMode {
     GamepadEx driverController;
     GamepadEx mechanismController;
     IntakeSubsystem intakeSubsystem;
-    TestSubsystem testSubsystem;
-
+    ShooterSubsystem shooterSubsystem;
+    ServoSubsystem servoSubsystem;
     @Override
     public void initialize() {
 
@@ -35,7 +37,8 @@ public class MainController extends CommandOpMode {
         configureIMU = new ConfigureIMU(hardwareMap);
         chasisSusbystem = new ChasisSusbystem(hardwareMap, configureIMU);
         intakeSubsystem = new IntakeSubsystem(hardwareMap);
-        testSubsystem = new TestSubsystem(hardwareMap);
+        shooterSubsystem = new ShooterSubsystem(hardwareMap);
+        servoSubsystem = new ServoSubsystem(hardwareMap);
 
         new Trigger(() ->
                 driverController.wasJustPressed(GamepadKeys.Button.X)
@@ -56,10 +59,21 @@ public class MainController extends CommandOpMode {
                 mechanismController.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.1
         ).whileActiveContinuous(new IntakeCommand(intakeSubsystem, mechanismController));
 
-
         new Trigger(() ->
                 mechanismController.getButton(GamepadKeys.Button.A)
-        ).whileActiveContinuous(new TestCommand(testSubsystem, mechanismController));
+        ).whileActiveContinuous(new IntakeCommand(intakeSubsystem, mechanismController));
+
+        new Trigger(() ->
+                mechanismController.getButton(GamepadKeys.Button.RIGHT_BUMPER)
+        ).whileActiveContinuous(new ServoCommand(servoSubsystem));
+
+
+        //----------------------------/Shooter/----------------------
+
+        new Trigger(() ->
+                mechanismController.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.1
+        ).whileActiveContinuous(new ShooterCommand(shooterSubsystem));
+
     }
 
     public void run() {

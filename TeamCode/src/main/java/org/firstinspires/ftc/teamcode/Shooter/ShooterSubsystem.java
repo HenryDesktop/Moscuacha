@@ -8,7 +8,7 @@ import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 public class ShooterSubsystem extends SubsystemBase {
     private MotorEx shooterMotor;
     public ShooterSubsystem(HardwareMap hwMap){
-        shooterMotor = hwMap.get(MotorEx.class, "ShooterMotor");
+        //shooterMotor = hwMap.get(MotorEx.class, "ShooterMotor");
     }
     public void start(){
         shooterMotor.set(1);

@@ -12,33 +12,54 @@ import org.firstinspires.ftc.teamcode.Chasis.ChasisCommand;
 import org.firstinspires.ftc.teamcode.Chasis.ChasisSusbystem;
 import org.firstinspires.ftc.teamcode.Intake.IntakeCommand;
 import org.firstinspires.ftc.teamcode.Intake.IntakeSubsystem;
+import org.firstinspires.ftc.teamcode.Shooter.Sensor.SensorSubsystem;
+import org.firstinspires.ftc.teamcode.Shooter.Sensor.SensorTest;
 import org.firstinspires.ftc.teamcode.Shooter.Servo.ServoCommand;
 import org.firstinspires.ftc.teamcode.Shooter.Servo.ServoSubsystem;
-import org.firstinspires.ftc.teamcode.Shooter.Servo.ShooterCommand;
+import org.firstinspires.ftc.teamcode.Shooter.ShooterCommand;
 import org.firstinspires.ftc.teamcode.Shooter.ShooterSubsystem;
 //import org.firstinspires.ftc.teamcode.Intake.Servos.ServoSubsystem;
 //import org.firstinspires.ftc.teamcode.Intake.Servos.ServosCommand;
 
 @TeleOp
 public class MainController extends CommandOpMode {
-    ChasisSusbystem chasisSusbystem;
-    ConfigureIMU configureIMU;
+
+    //----------------------------/Variables/----------------------
+
     GamepadEx driverController;
     GamepadEx mechanismController;
+
+    ChasisSusbystem chasisSusbystem;
+
     IntakeSubsystem intakeSubsystem;
     ShooterSubsystem shooterSubsystem;
     ServoSubsystem servoSubsystem;
+    SensorSubsystem sensorSubsystem;
+    SensorTest sensorTest;
+
+    ConfigureIMU configureIMU;
+
     @Override
     public void initialize() {
 
+        //----------------------------/Controllers/----------------------
+
         driverController = new GamepadEx(gamepad1);
         mechanismController = new GamepadEx(gamepad2);
+
+        //----------------------------/Subsystems/----------------------
 
         configureIMU = new ConfigureIMU(hardwareMap);
         chasisSusbystem = new ChasisSusbystem(hardwareMap, configureIMU);
         intakeSubsystem = new IntakeSubsystem(hardwareMap);
         shooterSubsystem = new ShooterSubsystem(hardwareMap);
         servoSubsystem = new ServoSubsystem(hardwareMap);
+
+        sensorSubsystem = new SensorSubsystem(hardwareMap, telemetry);
+        sensorTest = new SensorTest(hardwareMap, telemetry);
+        telemetry.update();
+
+        //----------------------------/Commands-Executors/----------------------
 
         new Trigger(() ->
                 driverController.wasJustPressed(GamepadKeys.Button.X)
@@ -76,6 +97,8 @@ public class MainController extends CommandOpMode {
 
     }
 
+    //----------------------------/Telemetry/----------------------
+
     public void run() {
         driverController.readButtons();
         mechanismController.readButtons();
@@ -83,6 +106,11 @@ public class MainController extends CommandOpMode {
         telemetry.addData("Heading Lock", chasisSusbystem.isLockEnabled() ? "ACTIVADO" : "DESACTIVADO");
         telemetry.addData("Heading", configureIMU.getHeading(AngleUnit.DEGREES));
         telemetry.addData("RX", chasisSusbystem.getOutPID());
+        telemetry.addData("RGB", sensorTest.getARGB());
+        telemetry.addData("Color", sensorTest.red());
+        telemetry.addData("Color", sensorTest.blue());
+        telemetry.addData("Color", sensorTest.green());
+
         telemetry.update();
 
         super.run();

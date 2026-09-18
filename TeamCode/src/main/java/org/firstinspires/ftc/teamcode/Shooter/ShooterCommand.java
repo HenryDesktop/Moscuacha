@@ -1,8 +1,6 @@
-package org.firstinspires.ftc.teamcode.Shooter.Servo;
+package org.firstinspires.ftc.teamcode.Shooter;
 
 import com.seattlesolvers.solverslib.command.CommandBase;
-
-import org.firstinspires.ftc.teamcode.Shooter.ShooterSubsystem;
 
 public class ShooterCommand extends CommandBase {
     ShooterSubsystem shooterSubsystem;
